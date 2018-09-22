@@ -124,7 +124,7 @@ def total_power(player):
 def getClosestPathLength(a, b):
     return len(game.shortest_paths(a,b)[0])
 
-def evaluate_fitness(player, opponent):
+def evaluate_fitness(player, opponent, path):
     average_player_attack = total_power(player)/3
     average_opponent_attack = total_power(opponent)/3
 
@@ -135,10 +135,40 @@ def evaluate_fitness(player, opponent):
 
     opponent_fitness = player.health / average_opponent_attack
 
-    if player.health < 70:
-        return opponent_fitness - player_fitness
-    else:
-        return -10
+
+    game_counter = game.get_turn_num()
+    
+    # Speed Evaluation
+    speed_fitness = 0
+    if game_counter <= 150:
+        speed_nodes = [3, 21]
+        counter = 0
+        for node in speed_nodes:
+            mon = game.get_monster(node)
+            if node in path and not mon.dead:
+                speed_fitness += (150 - game_counter)*0.05*(len(path) - path.index(node))*mon.death_effects.speed
+            elif node not in path:
+                counter += 1
+
+        if counter == 2:
+            speed_fitness = -0.2*(150-game_counter)
+
+            
+
+    # Health Evaluation
+    health_fitness = 0
+    health_nodes = [0]
+
+    for node in health_nodes:
+        if node in path and not game.get_monster(node).dead:
+            health_fitness = (game_counter - 125)*0.2
+
+        elif node not in path and player.health < 80:
+            health_fitness = -0.15*game_counter
+
+
+    return opponent_fitness - player_fitness + speed_fitness + health_fitness
+
 
 def get_stance_attack(player, stance):
     if stance == "Rock":
@@ -172,7 +202,7 @@ def rec(node, hops, tmp, res, player_state, dead_monsters):
     # Stop exploring
     if not hops:
         # Evaluate fitness
-        fitness = evaluate_fitness(player_state, game.get_opponent())
+        fitness = evaluate_fitness(player_state, game.get_opponent(), tmp)
         res.append((fitness, tmp))
         return 
 
@@ -254,3 +284,5 @@ for line in fileinput.input():
 
     # submit your decision for the turn (This function should be called exactly once per turn)
     game.submit_decision(destination_node, chosen_stance)
+
+    game.log(str(me.health))
