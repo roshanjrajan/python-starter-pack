@@ -5,87 +5,88 @@ import json
 
 # your import statements here
 import random
+import copy
 import networkx as nx
 
 graph_des = {
 
-	"Edges" : [
-		{"Name": "Edge_0_1", "Adjacents": [0, 1]},
-		{"Name": "Edge_0_6", "Adjacents": [0, 6]},
-		{"Name": "Edge_0_10", "Adjacents": [0, 10]},
-		{"Name": "Edge_1_2", "Adjacents": [1, 2]},
-		{"Name": "Edge_1_3", "Adjacents": [1, 3]},
-		{"Name": "Edge_2_3", "Adjacents": [2, 3]},
-		{"Name": "Edge_2_4", "Adjacents": [2, 4]},
-		{"Name": "Edge_4_5", "Adjacents": [4, 5]},
-		{"Name": "Edge_4_13", "Adjacents": [4, 13]},
-		{"Name": "Edge_5_6", "Adjacents": [5, 6]},
-		{"Name": "Edge_6_7", "Adjacents": [6, 7]},
-		{"Name": "Edge_7_8", "Adjacents": [7, 8]},
-		{"Name": "Edge_8_9", "Adjacents": [8, 9]},
-		{"Name": "Edge_8_14", "Adjacents": [8, 14]},
-		{"Name": "Edge_9_10", "Adjacents": [9, 10]},
-		{"Name": "Edge_10_11", "Adjacents": [10, 11]},
-		{"Name": "Edge_10_16", "Adjacents": [10, 16]},
-		{"Name": "Edge_11_12", "Adjacents": [11, 12]},
-		{"Name": "Edge_12_13", "Adjacents": [12, 13]},
-		{"Name": "Edge_12_16", "Adjacents": [12, 16]},
-		{"Name": "Edge_12_22", "Adjacents": [12, 22]},
-		{"Name": "Edge_13_14", "Adjacents": [13, 14]},
-		{"Name": "Edge_13_20", "Adjacents": [13, 20]},
-		{"Name": "Edge_14_19", "Adjacents": [14, 19]},
-		{"Name": "Edge_15_16", "Adjacents": [15, 16]},
-		{"Name": "Edge_15_18", "Adjacents": [15, 18]},
-		{"Name": "Edge_16_17", "Adjacents": [16, 17]},
-		{"Name": "Edge_17_18", "Adjacents": [17, 18]},
-		{"Name": "Edge_19_20", "Adjacents": [19, 20]},
-		{"Name": "Edge_19_22", "Adjacents": [19, 22]},
-		{"Name": "Edge_19_23", "Adjacents": [19, 23]},
-		{"Name": "Edge_20_21", "Adjacents": [20, 21]},
-		{"Name": "Edge_20_21", "Adjacents": [20, 21]},
-		{"Name": "Edge_21_22", "Adjacents": [20, 21]},
-		{"Name": "Edge_23_24", "Adjacents": [23, 24]}
-		
-	],
-	"Monsters" : [
-		{"Name": "Health 0", "Health": 4, "Stance": "Rock", "Speed": -33, "Location": 0, "Attack": 0, "Death Effects":
-			{"Rock": 0, "Paper": 0, "Scissors": 0, "Speed": 0, "Health": 20}} ,
-		{"Name": "Rock 1", "Health": 4, "Stance": "Rock", "Speed": -7, "Location": 1, "Attack": 1, "Death Effects":
-				{"Rock": 0, "Paper": 1, "Scissors": 0, "Speed": 0, "Health": 0}}, 
-		{"Name": "Paper 3", "Health": 8, "Stance": "Paper", "Speed": -53, "Location": 3, "Attack": 2, "Death Effects":
-			{"Rock": 0, "Paper": 0, "Scissors": 0, "Speed": 1, "Health": 0}},
-		{"Name": "Rock 4", "Health": 16, "Stance": "Rock", "Speed": -21, "Location": 4, "Attack": 4, "Death Effects":
-			{"Rock": 0, "Paper": 4, "Scissors": 0, "Speed": 0, "Health": 0}},
-		{"Name": "Paper 6", "Health": 4, "Stance": "Paper", "Speed": -7, "Location": 6, "Attack": 1, "Death Effects":
-			{"Rock": 0, "Paper": 0, "Scissors": 1, "Speed": 0, "Health": 0}},
-		{"Name": "Scissors 8", "Health": 16, "Stance": "Scissors", "Speed": -33, "Location": 8, "Attack": 4, "Death Effects":
-			{"Rock": 0, "Paper": 0, "Scissors": 4, "Speed": 0, "Health": 0}},
-		{"Name": "Scissors 10", "Health": 4, "Stance": "Scissors", "Speed": -7, "Location": 10, "Attack": 1, "Death Effects":
-			{"Rock": 1, "Paper": 0, "Scissors": 0, "Speed": 0, "Health": 0}},
-		{"Name": "Rock 11", "Health": 16, "Stance": "Rock", "Speed": -53, "Location": 11, "Attack": 4, "Death Effects":
-			{"Rock": 0, "Paper": 4, "Scissors": 0, "Speed": 0, "Health": 0}},
-		{"Name": "Rock 13", "Health": 8, "Stance": "Rock", "Speed": -21, "Location": 13, "Attack": 2, "Death Effects":
-			{"Rock": 2, "Paper": 0, "Scissors": 0, "Speed": 0, "Health": 0}},
-		{"Name": "Rock 15", "Health": 16, "Stance": "Rock", "Speed": -33, "Location": 15, "Attack": 4, "Death Effects":
-			{"Rock": 0, "Paper": 0, "Scissors": 4, "Speed": 0, "Health": 0}},
-		{"Name": "Rock 16", "Health": 8, "Stance": "Rock", "Speed": -21, "Location": 16, "Attack": 2, "Death Effects":
-			{"Rock": 2, "Paper": 0, "Scissors": 0, "Speed": 0, "Health": 0}},
-		{"Name": "Scissors 17", "Health": 16, "Stance": "Scissors", "Speed": -33, "Location": 17, "Attack": 4, "Death Effects":
-			{"Rock": 4, "Paper": 0, "Scissors": 0, "Speed": 0, "Health": 0}},
-		{"Name": "Paper 18", "Health": 8, "Stance": "Paper", "Speed": -21, "Location": 18, "Attack": 2, "Death Effects":
-			{"Rock": 0, "Paper": 2, "Scissors": 0, "Speed": 0, "Health": 0}},
-		{"Name": "Paper 20", "Health": 8, "Stance": "Paper", "Speed": -21, "Location": 20, "Attack": 2, "Death Effects":
-			{"Rock": 0, "Paper": 0, "Scissors": 2, "Speed": 0, "Health": 0}},
-		{"Name": "Scissors 21", "Health": 16, "Stance": "Scissors", "Speed": -53, "Location": 21, "Attack": 4, "Death Effects":
-			{"Rock": 0, "Paper": 0, "Scissors": 0, "Speed": 2, "Health": 0}},
-		{"Name": "Scissors 22", "Health": 8, "Stance": "Scissors", "Speed": -21, "Location": 22, "Attack": 2, "Death Effects":
-			{"Rock": 0, "Paper": 2, "Scissors": 0, "Speed": 0, "Health": 0}},
-		{"Name": "Scissors 23", "Health": 12, "Stance": "Scissors", "Speed": -33, "Location": 23, "Attack": 3, "Death Effects":
-			{"Rock": 1, "Paper": 0, "Scissors": 2, "Speed": 0, "Health": 0}},
-		{"Name": "Paper 24", "Health": 30, "Stance": "Paper", "Speed": -73, "Location": 24, "Attack": 5, "Death Effects":
-			{"Rock": 3, "Paper": 3, "Scissors": 3, "Speed": 0, "Health": 0}}
-	
-	]
+    "Edges" : [
+        {"Name": "Edge_0_1", "Adjacents": [0, 1]},
+        {"Name": "Edge_0_6", "Adjacents": [0, 6]},
+        {"Name": "Edge_0_10", "Adjacents": [0, 10]},
+        {"Name": "Edge_1_2", "Adjacents": [1, 2]},
+        {"Name": "Edge_1_3", "Adjacents": [1, 3]},
+        {"Name": "Edge_2_3", "Adjacents": [2, 3]},
+        {"Name": "Edge_2_4", "Adjacents": [2, 4]},
+        {"Name": "Edge_4_5", "Adjacents": [4, 5]},
+        {"Name": "Edge_4_13", "Adjacents": [4, 13]},
+        {"Name": "Edge_5_6", "Adjacents": [5, 6]},
+        {"Name": "Edge_6_7", "Adjacents": [6, 7]},
+        {"Name": "Edge_7_8", "Adjacents": [7, 8]},
+        {"Name": "Edge_8_9", "Adjacents": [8, 9]},
+        {"Name": "Edge_8_14", "Adjacents": [8, 14]},
+        {"Name": "Edge_9_10", "Adjacents": [9, 10]},
+        {"Name": "Edge_10_11", "Adjacents": [10, 11]},
+        {"Name": "Edge_10_16", "Adjacents": [10, 16]},
+        {"Name": "Edge_11_12", "Adjacents": [11, 12]},
+        {"Name": "Edge_12_13", "Adjacents": [12, 13]},
+        {"Name": "Edge_12_16", "Adjacents": [12, 16]},
+        {"Name": "Edge_12_22", "Adjacents": [12, 22]},
+        {"Name": "Edge_13_14", "Adjacents": [13, 14]},
+        {"Name": "Edge_13_20", "Adjacents": [13, 20]},
+        {"Name": "Edge_14_19", "Adjacents": [14, 19]},
+        {"Name": "Edge_15_16", "Adjacents": [15, 16]},
+        {"Name": "Edge_15_18", "Adjacents": [15, 18]},
+        {"Name": "Edge_16_17", "Adjacents": [16, 17]},
+        {"Name": "Edge_17_18", "Adjacents": [17, 18]},
+        {"Name": "Edge_19_20", "Adjacents": [19, 20]},
+        {"Name": "Edge_19_22", "Adjacents": [19, 22]},
+        {"Name": "Edge_19_23", "Adjacents": [19, 23]},
+        {"Name": "Edge_20_21", "Adjacents": [20, 21]},
+        {"Name": "Edge_20_21", "Adjacents": [20, 21]},
+        {"Name": "Edge_21_22", "Adjacents": [20, 21]},
+        {"Name": "Edge_23_24", "Adjacents": [23, 24]}
+        
+    ],
+    "Monsters" : [
+        {"Name": "Health 0", "Health": 4, "Stance": "Rock", "Speed": -33, "Location": 0, "Attack": 0, "Death Effects":
+            {"Rock": 0, "Paper": 0, "Scissors": 0, "Speed": 0, "Health": 20}} ,
+        {"Name": "Rock 1", "Health": 4, "Stance": "Rock", "Speed": -7, "Location": 1, "Attack": 1, "Death Effects":
+                {"Rock": 0, "Paper": 1, "Scissors": 0, "Speed": 0, "Health": 0}}, 
+        {"Name": "Paper 3", "Health": 8, "Stance": "Paper", "Speed": -53, "Location": 3, "Attack": 2, "Death Effects":
+            {"Rock": 0, "Paper": 0, "Scissors": 0, "Speed": 1, "Health": 0}},
+        {"Name": "Rock 4", "Health": 16, "Stance": "Rock", "Speed": -21, "Location": 4, "Attack": 4, "Death Effects":
+            {"Rock": 0, "Paper": 4, "Scissors": 0, "Speed": 0, "Health": 0}},
+        {"Name": "Paper 6", "Health": 4, "Stance": "Paper", "Speed": -7, "Location": 6, "Attack": 1, "Death Effects":
+            {"Rock": 0, "Paper": 0, "Scissors": 1, "Speed": 0, "Health": 0}},
+        {"Name": "Scissors 8", "Health": 16, "Stance": "Scissors", "Speed": -33, "Location": 8, "Attack": 4, "Death Effects":
+            {"Rock": 0, "Paper": 0, "Scissors": 4, "Speed": 0, "Health": 0}},
+        {"Name": "Scissors 10", "Health": 4, "Stance": "Scissors", "Speed": -7, "Location": 10, "Attack": 1, "Death Effects":
+            {"Rock": 1, "Paper": 0, "Scissors": 0, "Speed": 0, "Health": 0}},
+        {"Name": "Rock 11", "Health": 16, "Stance": "Rock", "Speed": -53, "Location": 11, "Attack": 4, "Death Effects":
+            {"Rock": 0, "Paper": 4, "Scissors": 0, "Speed": 0, "Health": 0}},
+        {"Name": "Rock 13", "Health": 8, "Stance": "Rock", "Speed": -21, "Location": 13, "Attack": 2, "Death Effects":
+            {"Rock": 2, "Paper": 0, "Scissors": 0, "Speed": 0, "Health": 0}},
+        {"Name": "Rock 15", "Health": 16, "Stance": "Rock", "Speed": -33, "Location": 15, "Attack": 4, "Death Effects":
+            {"Rock": 0, "Paper": 0, "Scissors": 4, "Speed": 0, "Health": 0}},
+        {"Name": "Rock 16", "Health": 8, "Stance": "Rock", "Speed": -21, "Location": 16, "Attack": 2, "Death Effects":
+            {"Rock": 2, "Paper": 0, "Scissors": 0, "Speed": 0, "Health": 0}},
+        {"Name": "Scissors 17", "Health": 16, "Stance": "Scissors", "Speed": -33, "Location": 17, "Attack": 4, "Death Effects":
+            {"Rock": 4, "Paper": 0, "Scissors": 0, "Speed": 0, "Health": 0}},
+        {"Name": "Paper 18", "Health": 8, "Stance": "Paper", "Speed": -21, "Location": 18, "Attack": 2, "Death Effects":
+            {"Rock": 0, "Paper": 2, "Scissors": 0, "Speed": 0, "Health": 0}},
+        {"Name": "Paper 20", "Health": 8, "Stance": "Paper", "Speed": -21, "Location": 20, "Attack": 2, "Death Effects":
+            {"Rock": 0, "Paper": 0, "Scissors": 2, "Speed": 0, "Health": 0}},
+        {"Name": "Scissors 21", "Health": 16, "Stance": "Scissors", "Speed": -53, "Location": 21, "Attack": 4, "Death Effects":
+            {"Rock": 0, "Paper": 0, "Scissors": 0, "Speed": 2, "Health": 0}},
+        {"Name": "Scissors 22", "Health": 8, "Stance": "Scissors", "Speed": -21, "Location": 22, "Attack": 2, "Death Effects":
+            {"Rock": 0, "Paper": 2, "Scissors": 0, "Speed": 0, "Health": 0}},
+        {"Name": "Scissors 23", "Health": 12, "Stance": "Scissors", "Speed": -33, "Location": 23, "Attack": 3, "Death Effects":
+            {"Rock": 1, "Paper": 0, "Scissors": 2, "Speed": 0, "Health": 0}},
+        {"Name": "Paper 24", "Health": 30, "Stance": "Paper", "Speed": -73, "Location": 24, "Attack": 5, "Death Effects":
+            {"Rock": 3, "Paper": 3, "Scissors": 3, "Speed": 0, "Health": 0}}
+    
+    ]
 }
 
 
@@ -112,6 +113,67 @@ def printLocations(arr, location):
 def log(message):
     game.log(str(message))
 
+def update_graph(game, graph):
+    monsters = game.get_all_monsters()
+    for monster in monsters:
+        graph.node[monster.location]["Monster"] = monster
+
+def total_power(player):
+    return player.rock + player.scissors + player.paper
+def evaluate_fitness(player, opponent):
+
+    average_player_attack = total_power(player)/3
+    average_opponent_attack = total_power(player)/3
+    player_fitness = opponent.health / average_player_attack
+    opponent_fitness = player.health / average_opponent_attack
+    return opponent_fitness - player_fitness 
+
+def get_stance_attack(player, stance):
+    if stance == "Rock":
+        return player.rock
+    elif stance == "Paper":
+        return player.paper
+    elif stance == "Scissors":
+        return player.scissors
+
+def rec(node, hops, tmp, res, player_state):
+    
+    # Do our shit
+    if game.has_monster(node):
+        monster = game.get_monster(node)
+        if not monster.dead:
+            best_stance = get_winning_stance(monster.stance)
+            attack = get_stance_attack(player_state, best_stance)
+            battle_duration = monster.health/attack
+            damage_taken = monster.attack * battle_duration
+            player_state.health -= damage_taken
+
+            # Get $$$
+            bounty = monster.death_effects
+            if bounty.rock > 0:
+                player_state.rock += bounty.rock
+            if bounty.paper > 0:
+                player_state.paper += bounty.paper
+            if bounty.scissors > 0:
+                player_state.scissors += bounty.scissors
+            if bounty.health > 0:
+                player_state.health += bounty.health
+            if bounty.speed > 0:
+                player_state.speed += bounty.speed
+
+    # Stop exploring
+    if not hops:
+        # Evaluate fitness
+        fitness = evaluate_fitness(player_state, game.get_opponent())
+        res.append((fitness, tmp))
+        return 
+
+    # Explore more
+    for neighbor in graph.neighbors(node):
+        #tmp.append(neighbor)
+        rec(neighbor, hops-1, tmp + [neighbor], res, copy.copy(player_state))
+        #tmp.pop()
+        
 def get_winning_stance(stance):
     if stance == "Rock":
         return "Paper"
@@ -133,25 +195,41 @@ for line in fileinput.input():
     # code in this block will be executed each turn of the game
  
     #log(graph.nodes())
-    game.log(str(graph.nodes()))
-    game.log(str(graph.edges()))
-
+    #game.log(str(graph.nodes()))
+    #game.log(str(graph.edges()))
 
     me = game.get_self()
 
-    if me.location == me.destination: # check if we have moved this turn
+    # Update board state
+    update_graph(game, graph)
+
+    # Backtrack to find best path
+    res = []
+    rec(me.location, 3, [me.location], res, copy.copy(game.get_self()))
+    best_path = max(res)
+
+    game.log(str(best_path))
+    #game.log("START" + str(res) + "END")
+
+  #  if me.location == me.destination: # check if we have moved this turn
         # get all living monsters closest to me
-        monsters = game.nearest_monsters(me.location, 1)
-        printLocations(monsters, me.location)
+ #       monsters = game.nearest_monsters(me.location, 1)
+ #       printLocations(monsters, me.location)
 
         # choose a monster to move to at random
-        monster_to_move_to = monsters[0]
+ #       monster_to_move_to = monsters[0]
 
         # get the set of shortest paths to that monster
-        paths = game.shortest_paths(me.location, monster_to_move_to.location)
-        destination_node = paths[0][0]
+#        paths = game.shortest_paths(me.location, monster_to_move_to.location)
+    #destination_node = paths[0][0]
+    if game.has_monster(me.location) and game.get_monster(me.location).dead:
+        destination_node = best_path[1][1]
+    elif not game.has_monster(me.location):
+        destination_node = best_path[1][1]
     else:
-        destination_node = me.destination
+        destination_node = me.location
+    #else:
+    #    destination_node = me.destination
 
     if game.get_opponent().location == me.location:
         chosen_stance = stances[random.randint(0, 2)]
@@ -163,8 +241,8 @@ for line in fileinput.input():
         chosen_stance = stances[random.randint(0, 2)]
 
     # get more health if we are low
-    if (me.health < len(game.shortest_paths(me.location, 0)[0]) * 15):
-        destination_node = game.shortest_paths(me.location, 0)[0][0]
+    # if (me.health < len(game.shortest_paths(me.location, 0)[0]) * 15):
+    #     destination_node = game.shortest_paths(me.location, 0)[0][0]
 
     # submit your decision for the turn (This function should be called exactly once per turn)
     game.submit_decision(destination_node, chosen_stance)
