@@ -74,6 +74,9 @@ class Monster:
         self.attack = jsn["Attack"]
         self.base_health = jsn["Base Health"]
 
+    def __str__(self):
+        return f'location {self.location}'
+
 class Node:
     def __init__(self, jsn):
         self.adjacents = []
