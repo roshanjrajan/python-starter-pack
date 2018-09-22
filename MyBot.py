@@ -205,7 +205,7 @@ for line in fileinput.input():
 
     # Backtrack to find best path
     res = []
-    rec(me.location, 3, [me.location], res, copy.copy(game.get_self()))
+    rec(me.location, 10, [me.location], res, copy.copy(game.get_self()))
     best_path = max(res)
 
     game.log(str(best_path))
