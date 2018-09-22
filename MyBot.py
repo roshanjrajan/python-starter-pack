@@ -64,7 +64,7 @@ for line in fileinput.input():
 
     # always attack our opponent
     if opponent.location == me.location:
-        chosen_stance = get_winning_stance(opponent.stance)
+        chosen_stance = stances[random.randint(0, 2)]
     # otherwise attack the monster
     elif game.has_monster(me.location) and not game.get_monster(me.location).dead:
         # if there's a monster at my location, choose the stance that damages that monster
