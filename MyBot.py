@@ -44,7 +44,7 @@ graph_des = {
         {"Name": "Edge_19_23", "Adjacents": [19, 23]},
         {"Name": "Edge_20_21", "Adjacents": [20, 21]},
         {"Name": "Edge_20_21", "Adjacents": [20, 21]},
-        {"Name": "Edge_21_22", "Adjacents": [20, 21]},
+        {"Name": "Edge_21_22", "Adjacents": [21, 22]},
         {"Name": "Edge_23_24", "Adjacents": [23, 24]}
         
     ],
@@ -120,13 +120,25 @@ def update_graph(game, graph):
 
 def total_power(player):
     return player.rock + player.scissors + player.paper
-def evaluate_fitness(player, opponent):
 
+def getClosestPathLength(a, b):
+    return len(game.shortest_paths(a,b)[0])
+
+def evaluate_fitness(player, opponent):
     average_player_attack = total_power(player)/3
-    average_opponent_attack = total_power(player)/3
-    player_fitness = opponent.health / average_player_attack
+    average_opponent_attack = total_power(opponent)/3
+
+    if getClosestPathLength(player.location, 0) > getClosestPathLength(opponent.location, 0):
+        player_fitness = (opponent.health + 20) / average_player_attack
+    else:
+        player_fitness = opponent.health / average_player_attack
+
     opponent_fitness = player.health / average_opponent_attack
-    return opponent_fitness - player_fitness 
+
+    if player.health < 70:
+        return opponent_fitness - player_fitness
+    else:
+        return -10
 
 def get_stance_attack(player, stance):
     if stance == "Rock":
@@ -136,12 +148,12 @@ def get_stance_attack(player, stance):
     elif stance == "Scissors":
         return player.scissors
 
-def rec(node, hops, tmp, res, player_state):
-    
+def rec(node, hops, tmp, res, player_state, dead_monsters):
+    player_state.location = node
     # Do our shit
     if game.has_monster(node):
         monster = game.get_monster(node)
-        if not monster.dead:
+        if not monster.dead and monster.location not in dead_monsters:
             best_stance = get_winning_stance(monster.stance)
             attack = get_stance_attack(player_state, best_stance)
             battle_duration = monster.health/attack
@@ -150,16 +162,12 @@ def rec(node, hops, tmp, res, player_state):
 
             # Get $$$
             bounty = monster.death_effects
-            if bounty.rock > 0:
-                player_state.rock += bounty.rock
-            if bounty.paper > 0:
-                player_state.paper += bounty.paper
-            if bounty.scissors > 0:
-                player_state.scissors += bounty.scissors
-            if bounty.health > 0:
-                player_state.health += bounty.health
-            if bounty.speed > 0:
-                player_state.speed += bounty.speed
+            player_state.rock += bounty.rock
+            player_state.paper += bounty.paper
+            player_state.scissors += bounty.scissors
+            player_state.health += bounty.health
+            player_state.speed += bounty.speed
+            dead_monsters.add(monster.location)
 
     # Stop exploring
     if not hops:
@@ -171,7 +179,7 @@ def rec(node, hops, tmp, res, player_state):
     # Explore more
     for neighbor in graph.neighbors(node):
         #tmp.append(neighbor)
-        rec(neighbor, hops-1, tmp + [neighbor], res, copy.copy(player_state))
+        rec(neighbor, hops-1, tmp + [neighbor], res, copy.copy(player_state),copy.copy(dead_monsters) )
         #tmp.pop()
         
 def get_winning_stance(stance):
@@ -205,7 +213,7 @@ for line in fileinput.input():
 
     # Backtrack to find best path
     res = []
-    rec(me.location, 10, [me.location], res, copy.copy(game.get_self()))
+    rec(me.location, 5, [me.location], res, copy.copy(game.get_self()), set())
     best_path = max(res)
 
     game.log(str(best_path))
